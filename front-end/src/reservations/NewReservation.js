@@ -30,6 +30,31 @@ export default function NewReservation() {
       });
     if (reservationDate < todaysDate)
       foundErrors.push({ message: "Uh Oh! The date of reservation has past." });
+    if (
+      reservationDate.getHours() < 10 ||
+      (reservationDate.getHours() === 10 && reservationDate.getMinutes() < 30)
+    ) {
+      foundErrors.push({
+        message:
+          "Reservation cannot be made: Restaurant is not open until 10:30AM.",
+      });
+    } else if (
+      reservationDate.getHours() > 22 ||
+      (reservationDate.getHours() === 22 && reservationDate.getMinutes() >= 30)
+    ) {
+      foundErrors.push({
+        message:
+          "Reservation cannot be made: Restaurant is closed after 10:30PM.",
+      });
+    } else if (
+      reservationDate.getHours() > 21 ||
+      (reservationDate.getHours() === 21 && reservationDate.getMinutes() > 30)
+    ) {
+      foundErrors.push({
+        message:
+          "Reservation cannot be made: Reservation must be made at least an hour before closing (10:30PM).",
+      });
+    }
     setErrors(foundErrors);
     return foundErrors.length > 0 ? false : true;
   }
@@ -69,6 +94,7 @@ export default function NewReservation() {
         id="last_name"
         onChange={handleChange}
         value={formData.last_name}
+        required
       />
       <label htmlFor="mobile_number">Mobile Number:&nbsp;</label>
       <input
@@ -77,6 +103,7 @@ export default function NewReservation() {
         id="mobile_number"
         onChange={handleChange}
         value={formData.mobile_number}
+        required
       />
       <label htmlFor="reservation_date">Date:&nbsp;</label>
       <input
@@ -84,6 +111,7 @@ export default function NewReservation() {
         type="date"
         onChange={handleChange}
         value={formData.reservation_date}
+        required
       />
       <label htmlFor="reservation_time">Time:&nbsp;</label>
       <input
@@ -91,6 +119,7 @@ export default function NewReservation() {
         type="time"
         onChange={handleChange}
         value={formData.reservation_time}
+        required
       />
       <label htmlFor="people">Party size:&nbsp;</label>
       <input
@@ -99,6 +128,7 @@ export default function NewReservation() {
         placeholder="0"
         onChange={handleChange}
         value={formData.people}
+        required
       />
       <button type="button" onClick={history.goBack}>
         Cancel
