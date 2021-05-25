@@ -10,6 +10,7 @@ import { listReservations } from "../utils/api";
 import NewReservation from "../reservations/NewReservation";
 import NewTable from "../tables/NewTable";
 import SeatReservation from "../reservations/SeatReservation";
+import Search from "../search/Search";
 /**
  * Defines all the routes for the application.
  *
@@ -57,6 +58,9 @@ function Routes() {
       </Route>
       <Route exact={true} path="/tables/new">
         <NewTable />
+      </Route>
+      <Route exact={true} path="/search">
+        <Search />
       </Route>
       <Route path="/dashboard">
         <Dashboard
