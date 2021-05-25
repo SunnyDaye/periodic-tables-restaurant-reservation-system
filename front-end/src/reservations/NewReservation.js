@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-export default function NewReservation() {
+
+export default function NewReservation({ edit, reservations }) {
   /*---------------------HOOKS------------------------*/
   const history = useHistory();
+  const { reservation_id } = useParams();
 
   /*---------------------STATES-------------------------*/
   const [formData, setFormData] = useState({
@@ -17,6 +19,30 @@ export default function NewReservation() {
   });
   const [errors, setErrors] = useState([]);
   /*------------------------VALIDATION----------------------*/
+  if (edit) {
+    // if either of these don't exist, we cannot continue.
+    if (!reservations || !reservation_id) return null;
+
+    // let's try to find the corresponding reservation:
+    const foundReservation = reservations.find(
+      (reservation) => reservation.reservation_id === Number(reservation_id)
+    );
+
+    // if it doesn't exist, or the reservation is booked, we cannot edit.
+    if (!foundReservation || foundReservation.status !== "booked") {
+      return <p>Only booked reservations can be edited.</p>;
+    }
+    setFormData({
+      first_name: foundReservation.first_name,
+      last_name: foundReservation.last_name,
+      mobile_number: foundReservation.mobile_number,
+      reservation_date: foundReservation.reservation_date,
+      reservation_time: foundReservation.reservation_time,
+      people: foundReservation.people,
+      reservation_id: foundReservation.reservation_id,
+    });
+  }
+
   function validateDate() {
     const reservationDate = new Date(
       `${formData.reservation_date}T${formData.reservation_time}:00.000`

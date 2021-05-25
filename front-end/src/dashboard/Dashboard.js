@@ -10,9 +10,15 @@ import TableEntry from "./TableEntry";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date, reservations, reservationsError, tables, tablesError }) {
+function Dashboard({
+  date,
+  reservations,
+  reservationsError,
+  tables,
+  tablesError,
+}) {
   const history = useHistory();
-  
+
   const reservationsList = () => {
     return reservations.map((reservation) => (
       <ReservationEntry
@@ -48,6 +54,8 @@ function Dashboard({ date, reservations, reservationsError, tables, tablesError 
             <th scope="col">Time</th>
             <th scope="col">People</th>
             <th scope="col">Status</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Cancel</th>
             <th scope="col">Seat Table</th>
           </tr>
         </thead>
