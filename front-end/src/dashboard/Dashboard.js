@@ -41,7 +41,7 @@ function Dashboard({
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      {JSON.stringify(reservations)/*Causing the array to show up */} 
       <table class="table">
         {/* "thead" is the table header, meant for the column labels */}
         <thead>
