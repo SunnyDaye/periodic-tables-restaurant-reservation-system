@@ -60,6 +60,8 @@ export default function NewReservation({ edit, reservations }) {
       });
     if (reservationDate < todaysDate)
       foundErrors.push({ message: "Uh Oh! The date of reservation has past." });
+
+    console.log("Hours and minutes:",reservationDate.getHours(), reservationDate.getMinutes());
     if (
       reservationDate.getHours() < 10 ||
       (reservationDate.getHours() === 10 && reservationDate.getMinutes() < 30)
