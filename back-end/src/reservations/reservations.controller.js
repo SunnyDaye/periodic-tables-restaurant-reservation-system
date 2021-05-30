@@ -33,7 +33,7 @@ function validateBody(req, res, next) {
   switch(true){
     case (Number.isNaN(Date.parse(`${req.body.data.reservation_date} ${req.body.data.reservation_time}`))):
       return next({ status: 400, message: "'reservation_date' or 'reservation_time' field is in an incorrect format" });
-    case (typeof req.body.data.people !== "number"):
+    case (typeof parseInt(req.body.data.people) !== "number"):
       return next({ status: 400, message: "'people' field must be a number" });
     case (req.body.data.people < 1):
       return next({ status: 400, message: "'people' field must be at least 1" });

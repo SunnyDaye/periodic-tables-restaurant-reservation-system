@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
+import {createReservation} from "../utils/api";
 
 export default function NewReservation({ edit, reservations }) {
   /*---------------------HOOKS------------------------*/
@@ -18,6 +19,7 @@ export default function NewReservation({ edit, reservations }) {
     people: 0,
   });
   const [errors, setErrors] = useState([]);
+  const [newRes, setNewRes] = useState(false);
   /*------------------------VALIDATION----------------------*/
   if (edit) {
     // if either of these don't exist, we cannot continue.
@@ -94,8 +96,17 @@ export default function NewReservation({ edit, reservations }) {
   }
   function handleSubmit(event) {
     event.preventDefault(); //Prevents page from refreshing and losing form data
-    //You will ween to make a POST to reservations here
-
+    //You will need to make a POST to reservations here
+    const abortController = new AbortController();
+    createReservation(formData, abortController.signal) //formdata is the body
+      .then((newRes) => {
+        console.log("CreateRes returns:" , newRes);
+        setNewRes(true);
+      }) //force rerender
+      .catch((error)=> {
+        console.log(error)
+        setErrors([error])
+      }); //catch erros
     if (validateDate())
       history.push(`/dashboard?date=${formData.reservation_date}`); //Take us back to the dashboard with reservations of the data given by the new reservation
   }

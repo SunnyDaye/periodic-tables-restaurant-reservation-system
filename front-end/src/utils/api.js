@@ -72,6 +72,7 @@ export async function listReservations(params, signal) {
 }
 
 export async function createReservation(reservation, signal) {
+  console.log("Create Res is running");
   const url = `${API_BASE_URL}/reservations`;
 
   // this will convert our object into readable JSON as a string
