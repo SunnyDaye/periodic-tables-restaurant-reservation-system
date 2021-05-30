@@ -20,8 +20,17 @@ function create(reservation) {
 		.returning("*");
 }
 
+//TODO- read: write query to read a single reservation
+function read(reservation_id) {
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id })
+        .first();
+}
+
 
 module.exports = {
     list,
     create,
+    read,
 }

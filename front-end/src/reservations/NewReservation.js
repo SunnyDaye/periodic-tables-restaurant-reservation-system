@@ -97,6 +97,7 @@ export default function NewReservation({ edit, reservations }) {
   /*--------------------HANDLERS--------------------------*/
   function handleChange({ target }) {
     setFormData({ ...formData, [target.name]: target.value });
+    if(target.name === "people") setFormData({ ...formData, [target.name]:parseInt(target.value)});
   }
 
   function validateFields(){

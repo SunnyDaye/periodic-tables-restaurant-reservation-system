@@ -1,4 +1,7 @@
 const service = require("./tables.service");
+const {
+  validateReservationId,
+} = require("../reservations/reservations.controller");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
@@ -8,6 +11,8 @@ async function list(req, res) {
 }
 
 function validateBody(req, res, next) {
+  if (!req.body.data)
+    return next({ status: 400, message: "Body must include a data object" });
   switch (true) {
     case !req.body.data.table_name || req.body.data.table_name === "":
       return next({
@@ -48,7 +53,91 @@ async function create(req, res) {
   res.status(201).json({ data: response[0] });
 }
 
+function validateSeat(req, res, next) {
+  if (res.locals.table.status === "occupied") {
+    return next({
+      status: 400,
+      message: "the table you selected is currently occupied",
+    });
+  }
+
+  if (res.locals.table.capacity < res.locals.reservation.people) {
+    return next({
+      status: 400,
+      message: `capacity: the table you selected cannot seat ${res.locals.reservation.people} people`,
+    });
+  }
+
+  next();
+}
+
+function checkReqBody(req,res,next){
+  if(!req.body.data || !req.body.data.reservation_id || req.body.data.reservation_id === ""){
+    return next({status:400, message: "reservation_id"});
+  }
+  next();
+}
+
+async function update(req, res) {
+  const response = await service.changeTableStatus(
+    res.locals.table.table_id,
+    res.locals.reservation.reservation_id,
+    "occupied"
+  );
+
+  res.status(200).json({ data: response });
+}
+
+async function validateTableId(req, res, next) {
+  const { table_id } = req.params;
+  const table = await service.read(table_id);
+
+  if (!table) {
+    return next({ status: 400, message: "given table does not exist" });
+  }
+
+  res.locals.table = table;
+
+  next();
+}
+
+async function validateSeatedTable(req, res, next) {
+  if (!res.locals.table.reservation_id) {
+    return next({
+      status: 400,
+      message: "given table does not have a corresponding reservation",
+    });
+  }
+
+  if (res.locals.table.status !== "occupied") {
+    return next({
+      status: 400,
+      message: "you can only finish occupied tables",
+    });
+  }
+
+  next();
+}
+
+async function destroy(req, res) {
+  const response = await service.changeTableStatus(
+    res.locals.table.table_id,
+    null,
+    "available"
+  );
+
+  res.status(200).json({ data: response });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [validateBody, asyncErrorBoundary(create)],
+  update: [
+    checkReqBody,
+    validateTableId,
+    validateReservationId,
+    validateSeat,
+    asyncErrorBoundary(update),
+  ],
+  destroy: [validateTableId, validateSeatedTable, asyncErrorBoundary(destroy)],
 };

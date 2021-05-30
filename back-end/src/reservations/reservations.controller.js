@@ -33,7 +33,7 @@ function validateBody(req, res, next) {
   switch(true){
     case (Number.isNaN(Date.parse(`${req.body.data.reservation_date} ${req.body.data.reservation_time}`))):
       return next({ status: 400, message: "'reservation_date' or 'reservation_time' field is in an incorrect format" });
-    case (typeof parseInt(req.body.data.people) !== "number"):
+    case (typeof req.body.data.people !== "number"):
       return next({ status: 400, message: "'people' field must be a number" });
     case (req.body.data.people < 1):
       return next({ status: 400, message: "'people' field must be at least 1" });
@@ -74,7 +74,26 @@ async function create(req, res) {
 	// when knex creates things, it'll return something in the form of an array. we only want the first object, so i access the 0th index here
 	res.status(201).json({ data: response[0] });
 }
+
+async function validateReservationId(req, res, next) {
+  const  reservation_id  = (req.params.reservation_id) ? req.params.reservation_id: req.body.data.reservation_id;
+  const reservation = await service.read(reservation_id);
+
+  if(!reservation) {
+      return next({ status: 404, message: `Reservation id ${reservation_id} does not exist` });
+  }
+
+  res.locals.reservation = reservation;
+
+  next();
+}
+
+function read(req,res){
+  res.json({data: res.locals.reservation});
+}
 module.exports = {
 	list: asyncErrorBoundary(list),
 	create: [validateBody, validateDate, asyncErrorBoundary(create)],
+  read: [asyncErrorBoundary(validateReservationId),read],
+  validateReservationId: asyncErrorBoundary(validateReservationId),
 };
