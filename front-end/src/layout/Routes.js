@@ -5,7 +5,7 @@ import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 
 import NewReservation from "../reservations/NewReservation";
 import NewTable from "../tables/NewTable";
@@ -28,7 +28,9 @@ function Routes() {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
 
-  useEffect(loadDashboard, [date]);
+  const [rerender,setRerender] = useState(false);
+
+  useEffect(loadDashboard, [date, rerender]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -36,6 +38,9 @@ function Routes() {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal)
+    .then(setTables)
+    .catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -51,7 +56,7 @@ function Routes() {
         <NewReservation />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
-        <SeatReservation reservations={reservations} tables={tables} />
+        <SeatReservation reservations={reservations} tables={tables} setRerender={setRerender}/>
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/edit">
         <NewReservation edit={true} reservations={reservations} />

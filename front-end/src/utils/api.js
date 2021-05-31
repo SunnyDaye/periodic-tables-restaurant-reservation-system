@@ -61,7 +61,7 @@ async function fetchJson(url, options, onCancel) {
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
 
-  if(params.date) {
+  if (params.date) {
     Object.entries(params).forEach(([key, value]) =>
       url.searchParams.append(key, value.toString())
     );
@@ -94,4 +94,12 @@ export async function createTable(table, signal) {
   const body = JSON.stringify({ data: table });
 
   return await fetchJson(url, { headers, signal, method: "POST", body }, []);
+}
+//TODO-PUT request to API_BASE_URL/tables/:table_id/seat
+export async function occupyTable(reservation_id, table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+
+  const body = JSON.stringify({ data: { reservation_id } });
+
+  return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
 }
