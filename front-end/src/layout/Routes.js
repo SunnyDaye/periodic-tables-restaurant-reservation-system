@@ -20,7 +20,9 @@ import Search from "../search/Search";
  */
 function Routes() {
   const query = useQuery();
-  const date = query.get("date");
+  const dateFound = query.get("date");
+
+  const date = (dateFound) ? dateFound : today();
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
@@ -53,7 +55,7 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/reservations/new">
-        <NewReservation />
+        <NewReservation setRerender={setRerender}/>
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
         <SeatReservation reservations={reservations} tables={tables} setRerender={setRerender}/>
@@ -72,7 +74,7 @@ function Routes() {
       </Route>
       <Route path="/dashboard">
         <Dashboard
-          date={date ? date : today()}
+          date={date}
           reservations={reservations}
           reservationsError={reservationsError}
           tables={tables}

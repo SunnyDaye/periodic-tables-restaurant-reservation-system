@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createReservation } from "../utils/api";
 
-export default function NewReservation({ edit, reservations }) {
+export default function NewReservation({ edit, reservations, setRerender}) {
   /*---------------------HOOKS------------------------*/
   const history = useHistory();
   const { reservation_id } = useParams();
@@ -19,7 +19,7 @@ export default function NewReservation({ edit, reservations }) {
     people: 0,
   });
   const [errors, setErrors] = useState([]);
-  const [newRes, setNewRes] = useState(false);
+  
   /*------------------------VALIDATION----------------------*/
   if (edit) {
     // if either of these don't exist, we cannot continue.
@@ -120,7 +120,7 @@ export default function NewReservation({ edit, reservations }) {
     createReservation(formData, abortController.signal) //formdata is the body
       .then((newRes) => {
         console.log("CreateRes returns:", newRes);
-        setNewRes(true);
+        setRerender(true);
       }) //force rerender
       .catch((error) => {
         console.log(error);
