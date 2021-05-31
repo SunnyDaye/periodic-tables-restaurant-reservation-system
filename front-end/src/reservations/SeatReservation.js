@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect ,useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { occupyTable } from "../utils/api";
+import {listReservations} from "../utils/api";
 
-export default function SeatReservation({ reservations, tables, setRerender }) {
+export default function SeatReservation({ reservations, tables, setRerender, setReservations }) {
   const history = useHistory();
 
   // here are the states we need to keep track of
@@ -11,7 +12,16 @@ export default function SeatReservation({ reservations, tables, setRerender }) {
   const [errors, setErrors] = useState([]);
   const { reservation_id } = useParams();
   
+  // useEffect(getAllReservations,[]);
 
+  // function getAllReservations(){
+  //   const abortController = new AbortController();
+  //   listReservations({},abortController.signal)
+  //   .then(setReservations)
+  //   .catch(console.error);
+  //   console.log("Reservations got!!!!!");
+  //   return () => abortController.abort();
+  // }
   // in case the props passed in don't exist
   if (!tables || !reservations) return null;
 
@@ -40,10 +50,11 @@ export default function SeatReservation({ reservations, tables, setRerender }) {
     const foundErrors = [];
     // we will need to use the find method here to get the actual table/reservation objects from their ids
     const foundTable = tables.find((table) => table.table_id == tableId);
+    console.log("What reservations looks like:",reservations);
     const foundReservation = reservations.find(
       (reservation) => reservation.reservation_id == reservation_id
     );
-
+      console.log("Found reservation looks like this:",foundReservation);
     if (!foundTable) {
       foundErrors.push({message:"The table you selected does not exist."});
     } else if (!foundReservation) {

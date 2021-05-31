@@ -13,14 +13,17 @@ import TableEntry from "./TableEntry";
 function Dashboard({
   date,
   reservations,
-  reservationsError,
+  reservationsToDisplay,
+  reservationsToDisplayError,
   tables,
   tablesError,
 }) {
   const history = useHistory();
+  // const isToday = (date == today() || !date);
+  // const reservationsToDisplay = (isToday) ? reservations.filter((res) => res.reservation_date == today()): reservations;
 
   const reservationsList = () => {
-    return reservations.map((reservation) => (
+    return reservationsToDisplay.map((reservation) => (
       <ReservationEntry
         key={reservation.reservation_id}
         reservation={reservation}
@@ -34,13 +37,14 @@ function Dashboard({
     ));
   };
 
+  console.log("Display errors",reservationsToDisplayError);
   return (
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-      <ErrorAlert error={reservationsError} />
+      {(reservationsToDisplayError.length > 0) ? <ErrorAlert error={reservationsToDisplayError} />: null}
       {JSON.stringify(reservations)/*Causing the array to show up */} 
       <table class="table">
         {/* "thead" is the table header, meant for the column labels */}

@@ -20,12 +20,14 @@ import Search from "../search/Search";
  */
 function Routes() {
   const query = useQuery();
-  const dateFound = query.get("date");
+  const date = (query.get("date")) ? query.get("date") : today();
 
-  const date = (dateFound) ? dateFound : today();
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+
+  const [reservationsToDisplay, setReservationsToDisplay] = useState([]); 
+  const [reservationsToDisplayError, setReservationsToDisplayError] = useState([]);
 
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
@@ -37,12 +39,17 @@ function Routes() {
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date }, abortController.signal)
+    listReservations({}, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listReservations({ date }, abortController.signal)
+      .then(setReservationsToDisplay)
+      .catch(setReservationsToDisplayError);
     listTables(abortController.signal)
     .then(setTables)
     .catch(setTablesError);
+
+    console.log("When dashboard loads, reservations look like this: ",reservations);
     return () => abortController.abort();
   }
 
@@ -58,7 +65,7 @@ function Routes() {
         <NewReservation setRerender={setRerender}/>
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
-        <SeatReservation reservations={reservations} tables={tables} setRerender={setRerender}/>
+        <SeatReservation reservations={reservations} setReservations={setReservations} tables={tables} setRerender={setRerender}/>
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/edit">
         <NewReservation edit={true} reservations={reservations} />
@@ -76,7 +83,8 @@ function Routes() {
         <Dashboard
           date={date}
           reservations={reservations}
-          reservationsError={reservationsError}
+          reservationsToDisplay={reservationsToDisplay}
+          reservationsToDisplayError={reservationsToDisplayError}
           tables={tables}
           tablesError={tablesError}
         />
