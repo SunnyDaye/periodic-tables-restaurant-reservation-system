@@ -12,17 +12,6 @@ export default function SeatReservation({ reservations, tables, setRerender, set
   const [errors, setErrors] = useState([]);
   const { reservation_id } = useParams();
   
-  // useEffect(getAllReservations,[]);
-
-  // function getAllReservations(){
-  //   const abortController = new AbortController();
-  //   listReservations({},abortController.signal)
-  //   .then(setReservations)
-  //   .catch(console.error);
-  //   console.log("Reservations got!!!!!");
-  //   return () => abortController.abort();
-  // }
-  // in case the props passed in don't exist
   if (!tables || !reservations) return null;
 
   // change handler sets tableId state

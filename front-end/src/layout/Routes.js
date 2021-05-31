@@ -74,7 +74,7 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/tables/new">
-        <NewTable />
+        <NewTable setRerender={setRerender} />
       </Route>
       <Route exact={true} path="/search">
         <Search />

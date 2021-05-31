@@ -119,7 +119,6 @@ export default function NewReservation({ edit, reservations, setRerender}) {
     const abortController = new AbortController();
     createReservation(formData, abortController.signal) //formdata is the body
       .then((newRes) => {
-        console.log("CreateRes returns:", newRes);
         setRerender(true);
       }) //force rerender
       .catch((error) => {
