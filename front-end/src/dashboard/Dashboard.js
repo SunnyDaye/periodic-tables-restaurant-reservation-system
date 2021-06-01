@@ -19,7 +19,7 @@ function Dashboard({
   tablesError,
   loadDashboard,
 }) {
-  
+  // useEffect(loadDashboard,[]);
   const history = useHistory();
   // const isToday = (date == today() || !date);
   // const reservationsToDisplay = (isToday) ? reservations.filter((res) => res.reservation_date == today()): reservations;
@@ -29,6 +29,7 @@ function Dashboard({
         key={reservation.reservation_id}
         reservation={reservation}
         loadDashboard={loadDashboard}
+        fromDash={true}
       />
     ));
   };
@@ -39,7 +40,7 @@ function Dashboard({
     ));
   };
 
-  console.log("Display errors",reservationsToDisplayError);
+  
   return (
     <main>
       <h1>Dashboard</h1>

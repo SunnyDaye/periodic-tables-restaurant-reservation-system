@@ -142,7 +142,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
       if(edit) {
 				editReservation(reservation_id, formData, abortController.signal)
 					.then(loadDashboard)
-					.then(() => history.goBack())
+          .then(history.goBack())
 					.catch(console.error);
 			}else{
         createReservation(formData, abortController.signal) //formdata is the body

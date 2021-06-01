@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { listReservations } from "../utils/api";
 import ReservationEntry from "../dashboard/ReservationEntry";
 import ErrorAlert from "../layout/ErrorAlert";
 
-export default function Search() {
+export default function Search(loadDashboard) {
+  // useEffect(loadDashboard,[]);
   // this state stores the search input
   const [mobileNumber, setMobileNumber] = useState("");
 
@@ -29,7 +30,7 @@ export default function Search() {
     // the search value is our mobileNumber state
     listReservations({ mobile_number }, abortController.signal)
       .then(setReservations)
-      .then(console.log(reservations))
+      .then(loadDashboard)
       .catch(setError);
 
     return () => abortController.abort();

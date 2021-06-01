@@ -33,7 +33,7 @@ function Routes() {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
 
-  const [rerender, setRerender] = useState(false);
+
 
   useEffect(loadDashboard, [date]);
 
@@ -83,7 +83,7 @@ function Routes() {
         <NewTable loadDashboard={loadDashboard} />
       </Route>
       <Route exact={true} path="/search">
-        <Search />
+        <Search loadDashboard={loadDashboard} />
       </Route>
       <Route path="/dashboard">
         <Dashboard
@@ -93,7 +93,6 @@ function Routes() {
           reservationsToDisplayError={reservationsToDisplayError}
           tables={tables}
           tablesError={tablesError}
-          setRerender={setRerender}
           loadDashboard={loadDashboard}
         />
       </Route>

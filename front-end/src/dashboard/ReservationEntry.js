@@ -1,8 +1,18 @@
-import React from "react";
-import {changeReservationStatus} from "../utils/api";
+import React, { useEffect } from "react";
+import { changeReservationStatus } from "../utils/api";
 // note that i pass in a reservation object as a prop:
 
-export default function ReservationEntry({ reservation, loadDashboard}) {
+export default function ReservationEntry({
+  reservation,
+  loadDashboard,
+  fromDash,
+}) {
+  useEffect(() => {
+    if (fromDash) {
+      loadDashboard();
+    }
+  }, []);
+
   function handleCancel() {
     // revisiting our friend window.confirm:
     if (
@@ -13,10 +23,13 @@ export default function ReservationEntry({ reservation, loadDashboard}) {
       // api call will go here eventually
       const abortController = new AbortController();
 
-			changeReservationStatus(reservation.reservation_id, "cancelled", abortController.signal)
-				.then(loadDashboard);
+      changeReservationStatus(
+        reservation.reservation_id,
+        "cancelled",
+        abortController.signal
+      ).then(loadDashboard);
 
-			return () => abortController.abort();
+      return () => abortController.abort();
       // window.location.reload();
     }
   }
@@ -52,7 +65,7 @@ export default function ReservationEntry({ reservation, loadDashboard}) {
         </button>
       </td>
 
-      {(reservation.status === "booked") && (
+      {reservation.status === "booked" && (
         <td>
           <a href={`/reservations/${reservation.reservation_id}/seat`}>
             <button type="button">Seat</button>
