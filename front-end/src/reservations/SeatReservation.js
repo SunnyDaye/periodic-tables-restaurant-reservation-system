@@ -2,7 +2,7 @@ import React, { useEffect ,useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { occupyTable } from "../utils/api";
-import {listReservations} from "../utils/api";
+import {changeReservationStatus} from "../utils/api";
 
 export default function SeatReservation({ reservations, tables, setRerender, setReservations }) {
   const history = useHistory();
@@ -26,9 +26,11 @@ export default function SeatReservation({ reservations, tables, setRerender, set
     // we will be creating a validation function as well
     if (validateSeat()) {
       occupyTable(reservation_id,tableId,abortController.signal)
-      .then((response) => {
-        setRerender(true);
-      })
+      .then((response) =>setRerender(true))
+      .catch(console.error);
+
+      changeReservationStatus(reservation_id,tableId,abortController.signal)
+      .then((response)=>setRerender(true))
       .catch(console.error);
       history.push(`/dashboard`);
     }

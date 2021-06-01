@@ -82,11 +82,20 @@ export async function createReservation(reservation, signal) {
   return await fetchJson(url, { headers, signal, method: "POST", body }, []);
 }
 
+export async function changeReservationStatus(reservation_id,status,signal){
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const body = JSON.stringify({ data: { status }});
+
+  return await fetchJson(url, { headers, signal, method: "PUT", body}, []);
+}
+
+
 export async function listTables(signal) {
   const url = `${API_BASE_URL}/tables`;
 
   return await fetchJson(url, { headers, signal }, []);
 }
+
 
 export async function createTable(table, signal) {
   const url = `${API_BASE_URL}/tables`;
@@ -102,4 +111,13 @@ export async function occupyTable(reservation_id, table_id, signal) {
   const body = JSON.stringify({ data: { reservation_id } });
 
   return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
+}
+
+//TODO- DELETE request to API_BASE_URL/tables/:table_id/seat
+//Should return the assoicated reservation id back
+export async function freeTable(table_id,signal){
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+
+  return await fetchJson(url, { headers, signal, method: "DELETE"},[]);
+
 }

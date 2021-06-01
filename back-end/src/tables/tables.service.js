@@ -25,7 +25,7 @@ function read(table_id) { //to ensure table exist
 function changeTableStatus(table_id, reservation_id, status) { // to free, set reservation id to null and status to available
     return knex("tables")
         .where({ table_id: table_id })
-        .update({ reservation_id: reservation_id , status });
+        .update({ reservation_id , status });
 }
 
 module.exports = {

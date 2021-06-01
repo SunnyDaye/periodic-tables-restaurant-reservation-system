@@ -37,6 +37,8 @@ function validateBody(req, res, next) {
       return next({ status: 400, message: "'people' field must be a number" });
     case (req.body.data.people < 1):
       return next({ status: 400, message: "'people' field must be at least 1" });
+    case (req.body.data.status === "seated" || req.body.data.status === "finished"): 
+      return next({status: 400, message: "reservation must not be seated or finished"});
     default: next();
   }
 	
@@ -88,12 +90,40 @@ async function validateReservationId(req, res, next) {
   next();
 }
 
+
 function read(req,res){
   res.json({data: res.locals.reservation});
 }
+
+function checkStatus(req,res,next){
+  const { status } = res.locals.reservation;
+  if(status == "finished"){
+    next({ status:400, message:"Reservation is already finished. Cannot Update"});
+  }
+
+  if(req.body.data.status == "unknown"){
+    next({ status:400, message:"Reservation is unknown"});
+  }
+  next();
+}
+
+async function update(req,res){
+  const {status} = req.body.data;
+  const {reservation_id} = res.locals.reservation;
+  const response =  await service.update(reservation_id,status);
+  let data;
+  if(response){
+    res.locals.reservation.status = status;
+    data = res.locals.reservation;
+  }
+
+  res.status(200).json({data});
+}
+
 module.exports = {
 	list: asyncErrorBoundary(list),
 	create: [validateBody, validateDate, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(validateReservationId),read],
+  update: [asyncErrorBoundary(validateReservationId),checkStatus,asyncErrorBoundary(update)],
   validateReservationId: asyncErrorBoundary(validateReservationId),
 };

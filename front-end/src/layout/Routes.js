@@ -87,6 +87,8 @@ function Routes() {
           reservationsToDisplayError={reservationsToDisplayError}
           tables={tables}
           tablesError={tablesError}
+          setRerender={setRerender}
+          loadDashboard={loadDashboard}
         />
       </Route>
       <Route>

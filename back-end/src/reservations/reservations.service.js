@@ -9,7 +9,7 @@ const knex = require("../db/connection");
 
 function list(reservation_date){
     return (reservation_date) 
-    ? knex("reservations").select("*").where({ reservation_date }).orderBy(["reservation_date","reservation_time"])
+    ? knex("reservations").select("*").whereNot({status: "finished"}).andWhere({ reservation_date }).orderBy(["reservation_date","reservation_time"])
     : knex("reservations").select("*").orderBy(["reservation_date","reservation_time"]); 
 }
 
@@ -28,9 +28,18 @@ function read(reservation_id) {
         .first();
 }
 
+//TODO- update: write query to update a reservations. Used for updating reservation status.
+function update(reservation_id,status){
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id })
+        .update({status});
+}
+
 
 module.exports = {
     list,
     create,
     read,
+    update,
 }
