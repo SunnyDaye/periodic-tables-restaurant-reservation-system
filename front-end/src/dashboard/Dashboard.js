@@ -46,8 +46,7 @@ function Dashboard({
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-      {(reservationsToDisplayError.length > 0) ? <ErrorAlert error={reservationsToDisplayError} />: null}
-      {JSON.stringify(reservations)/*Causing the array to show up */} 
+      {(reservationsToDisplayError.length > 0) ? <ErrorAlert error={reservationsToDisplayError} />: null} 
       <table className="table">
         {/* "thead" is the table header, meant for the column labels */}
         <thead>
