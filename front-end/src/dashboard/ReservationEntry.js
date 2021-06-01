@@ -28,7 +28,7 @@ export default function ReservationEntry({
         "cancelled",
         abortController.signal
       ).then(loadDashboard);
-
+        window.location.reload();
       return () => abortController.abort();
       // window.location.reload();
     }
