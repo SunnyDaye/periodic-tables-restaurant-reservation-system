@@ -18,7 +18,7 @@ The table below describes the folders in this starter repository:
 
 | Folder/file path | Description                                                      |
 | ---------------- | ---------------------------------------------------------------- |
-| `./back-end`     | The backend project, which runs on `localhost:5000` by default.  |
+| `./back-end`     | The backend project, which runs on `localhost:4999` by default.  |
 | `./front-end`    | The frontend project, which runs on `localhost:3000` by default. |
 
 This starter code closely follows the best practices and patterns established in the Robust Server Structure module.
