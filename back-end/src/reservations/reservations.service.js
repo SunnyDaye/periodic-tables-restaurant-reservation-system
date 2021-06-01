@@ -9,8 +9,12 @@ const knex = require("../db/connection");
 
 function list(reservation_date){
     return (reservation_date) 
-    ? knex("reservations").select("*").whereNot({status: "finished"}).andWhere({ reservation_date }).orderBy(["reservation_date","reservation_time"])
+    ? knex("reservations").select("*").where({ reservation_date }).andWhereNot({status: "finished"}).andWhereNot({status:"cancelled"}).orderBy(["reservation_date","reservation_time"])
     : knex("reservations").select("*").orderBy(["reservation_date","reservation_time"]); 
+}
+
+function getReservationsByNumber(mobile_number){
+    return knex("reservations").select("*").where("mobile_number","like",`%${mobile_number}%`);
 }
 
 // TODO- create: write knex query to create a new resrvation 
@@ -36,10 +40,17 @@ function update(reservation_id,status){
         .update({status});
 }
 
+function edit(reservation_id, reservation) {
+	return knex("reservations")
+		.where({ reservation_id })
+		.update({ ...reservation });
+}
 
 module.exports = {
     list,
+    getReservationsByNumber,
     create,
     read,
     update,
+    edit,
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { freeTable, changeReservationStatus } from "../utils/api";
+import { freeTable, changeReservationStatus,listReservations } from "../utils/api";
 
 export default function TableEntry({ table, loadDashboard }) {
   const history = useHistory();
@@ -16,8 +16,9 @@ export default function TableEntry({ table, loadDashboard }) {
       const abortController = new AbortController();
       // delete request here, we will add this later
       freeTable(table.table_id,abortController.signal)
-      .then((response)=>changeReservationStatus(response,null,abortController.signal))
+      .then(changeReservationStatus(table.reservation_id,"finished",abortController.signal))
       .then(loadDashboard)
+      .catch(console.error);
 
       return () => abortController.abort();
     }

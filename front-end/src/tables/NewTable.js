@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createTable } from "../utils/api";
 
-export default function NewTable({ setRerender }) {
+export default function NewTable({ loadDashboard }) {
   const history = useHistory();
 
   const [error, setError] = useState(null);
@@ -24,7 +24,7 @@ export default function NewTable({ setRerender }) {
     const abortController = new AbortController();
     if (validateFields()) {
       createTable(formData, abortController.signal)
-        .then((resp) => setRerender(true))
+        .then(loadDashboard)
         .catch(console.error);
       history.push(`/dashboard`);
     }

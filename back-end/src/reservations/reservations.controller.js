@@ -9,6 +9,12 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 async function list(req, res) {
   // create a variable that holds the return value of the list function call from servicee
   const reservation_date = req.query.date;
+  const mobile_number = req.query.mobile_number;
+  if(mobile_number){
+    res.json({
+      data: await service.getReservationsByNumber(mobile_number),
+    });
+  }
   res.json({
     data: await service.list(reservation_date),
   });
@@ -120,10 +126,18 @@ async function update(req,res){
   res.status(200).json({data});
 }
 
+async function edit(req, res) {
+	const response = await service.edit(res.locals.reservation.reservation_id, req.body.data);
+  const data = await service.read(req.params.reservation_id);
+
+	res.status(200).json({ data });
+}
+
 module.exports = {
 	list: asyncErrorBoundary(list),
 	create: [validateBody, validateDate, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(validateReservationId),read],
   update: [asyncErrorBoundary(validateReservationId),checkStatus,asyncErrorBoundary(update)],
+  edit: [validateReservationId, validateBody, validateDate, asyncErrorBoundary(edit)],
   validateReservationId: asyncErrorBoundary(validateReservationId),
 };

@@ -61,7 +61,7 @@ async function fetchJson(url, options, onCancel) {
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
 
-  if (params.date) {
+  if (params.date || params.mobile_number) {
     Object.entries(params).forEach(([key, value]) =>
       url.searchParams.append(key, value.toString())
     );
@@ -87,6 +87,14 @@ export async function changeReservationStatus(reservation_id,status,signal){
   const body = JSON.stringify({ data: { status }});
 
   return await fetchJson(url, { headers, signal, method: "PUT", body}, []);
+}
+
+export async function editReservation(reservation_id, reservation, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+
+  const body = JSON.stringify({ data: reservation });
+
+  return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
 }
 
 

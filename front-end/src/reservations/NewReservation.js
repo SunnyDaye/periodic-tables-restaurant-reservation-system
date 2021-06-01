@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { createReservation } from "../utils/api";
+import { createReservation, editReservation } from "../utils/api";
 
-export default function NewReservation({ edit, reservations, setRerender}) {
+export default function NewReservation({ edit, reservations, loadDashboard }) {
+  
   /*---------------------HOOKS------------------------*/
   const history = useHistory();
   const { reservation_id } = useParams();
@@ -19,40 +20,48 @@ export default function NewReservation({ edit, reservations, setRerender}) {
     people: 0,
   });
   const [errors, setErrors] = useState([]);
+
+  useEffect(editMode,[edit, reservation_id, reservations]);
+
+  function editMode(){
+    if (edit) {
+      
+      if (!reservations || !reservation_id) return null;
   
-  /*------------------------VALIDATION----------------------*/
-  if (edit) {
-    // if either of these don't exist, we cannot continue.
-    if (!reservations || !reservation_id) return null;
-
-    // let's try to find the corresponding reservation:
-    const foundReservation = reservations.find(
-      (reservation) => reservation.reservation_id === Number(reservation_id)
-    );
-
-    // if it doesn't exist, or the reservation is booked, we cannot edit.
-    if (!foundReservation || foundReservation.status !== "booked") {
-      return <p>Only booked reservations can be edited.</p>;
+      // let's try to find the corresponding reservation:
+      const foundReservation = reservations.find(
+        (reservation) => reservation.reservation_id === Number(reservation_id)
+      );
+  
+      // if it doesn't exist, or the reservation is booked, we cannot edit.
+      if (!foundReservation || foundReservation.status !== "booked") {
+        return <p>Only booked reservations can be edited.</p>;
+      }
+      setFormData({
+        first_name: foundReservation.first_name,
+        last_name: foundReservation.last_name,
+        mobile_number: foundReservation.mobile_number,
+        reservation_date: foundReservation.reservation_date,
+        reservation_time: foundReservation.reservation_time,
+        people: foundReservation.people,
+        reservation_id: foundReservation.reservation_id,
+      });
     }
-    setFormData({
-      first_name: foundReservation.first_name,
-      last_name: foundReservation.last_name,
-      mobile_number: foundReservation.mobile_number,
-      reservation_date: foundReservation.reservation_date,
-      reservation_time: foundReservation.reservation_time,
-      people: foundReservation.people,
-      reservation_id: foundReservation.reservation_id,
-    });
+    
   }
 
+  /*------------------------VALIDATION----------------------*/
+
+  
+
   function validateDate() {
-    
     const reservationDate = new Date(
       `${formData.reservation_date}T${formData.reservation_time}:00.000`
     );
     const todaysDate = new Date();
     const foundErrors = [];
-    if(formData.reservation_date.indexOf('-') > 4) foundErrors.push({message: "Use correct data format"});
+    if (formData.reservation_date.indexOf("-") > 4)
+      foundErrors.push({ message: "Use correct data format" });
     if (reservationDate.getDay() === 2)
       foundErrors.push({
         message:
@@ -61,7 +70,11 @@ export default function NewReservation({ edit, reservations, setRerender}) {
     if (reservationDate < todaysDate)
       foundErrors.push({ message: "Uh Oh! The date of reservation has past." });
 
-    console.log("Hours and minutes:",reservationDate.getHours(), reservationDate.getMinutes());
+    console.log(
+      "Hours and minutes:",
+      reservationDate.getHours(),
+      reservationDate.getMinutes()
+    );
     if (
       reservationDate.getHours() < 10 ||
       (reservationDate.getHours() === 10 && reservationDate.getMinutes() < 30)
@@ -97,35 +110,52 @@ export default function NewReservation({ edit, reservations, setRerender}) {
   /*--------------------HANDLERS--------------------------*/
   function handleChange({ target }) {
     setFormData({ ...formData, [target.name]: target.value });
-    if(target.name === "people") setFormData({ ...formData, [target.name]:parseInt(target.value)});
+    if (target.name === "people")
+      setFormData({ ...formData, [target.name]: parseInt(target.value) });
   }
 
-  function validateFields(){
+  function validateFields() {
     let foundErrors = [];
-    if(!formData.first_name || formData.first_name === "") foundErrors.push({message:"First name required"});
-    if(!formData.last_name || formData.last_name === "") foundErrors.push({message:"Last name required"});
-    if(!formData.mobile_number || formData.mobile_number === "") foundErrors.push({message:"Mobile required"});
-    if(!formData.people || formData.people === "") foundErrors.push({message:"Party size required"});
-    if(!formData.reservation_date || formData.reservation_date === "") foundErrors.push({message:"Date required"});
-    if(!formData.reservation_time || formData.reservation_time === "") foundErrors.push({message:"Time required"});
-    setErrors([...errors,...foundErrors]);
+    if (!formData.first_name || formData.first_name === "")
+      foundErrors.push({ message: "First name required" });
+    if (!formData.last_name || formData.last_name === "")
+      foundErrors.push({ message: "Last name required" });
+    if (!formData.mobile_number || formData.mobile_number === "")
+      foundErrors.push({ message: "Mobile required" });
+    if (!formData.people || formData.people === "")
+      foundErrors.push({ message: "Party size required" });
+    if (!formData.reservation_date || formData.reservation_date === "")
+      foundErrors.push({ message: "Date required" });
+    if (!formData.reservation_time || formData.reservation_time === "")
+      foundErrors.push({ message: "Time required" });
+    setErrors([...errors, ...foundErrors]);
     return foundErrors.length === 0;
   }
 
   function handleSubmit(event) {
     event.preventDefault(); //Prevents page from refreshing and losing form data
-    if(!validateFields()) return null;
+    if (!validateFields()) return null;
     //You will need to make a POST to reservations here
-    const abortController = new AbortController();
-    createReservation(formData, abortController.signal) //formdata is the body
-      .then((newRes) => {
-        setRerender(true);
-      }) //force rerender
-      .catch((error) => {
-        console.log(error);
-      }); //catch erros
-    if (validateDate())
-      history.push(`/dashboard?date=${formData.reservation_date}`); //Take us back to the dashboard with reservations of the data given by the new reservation
+    if (validateDate()) {
+      const abortController = new AbortController();
+
+      if(edit) {
+				editReservation(reservation_id, formData, abortController.signal)
+					.then(loadDashboard)
+					.then(() => history.goBack())
+					.catch(console.error);
+			}else{
+        createReservation(formData, abortController.signal) //formdata is the body
+        .then(loadDashboard)
+        .then(() =>
+          history.push(`/dashboard?date=${formData.reservation_date}`)
+        ) //force rerender
+        .catch(console.error); //catch erros
+      //Take us back to the dashboard with reservations of the data given by the new reservation
+      }
+      return () => abortController.abort();
+    }
+
   }
 
   /*--------------------VISUALS---------------------------*/

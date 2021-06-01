@@ -19,16 +19,17 @@ export default function Search() {
 
   function handleSubmit(event) {
     event.preventDefault();
-
+    console.log("Search submitting. Value is", mobileNumber);
     // we will be adding our api call here
     const abortController = new AbortController();
 
     setError(null);
-
+    const mobile_number = mobileNumber;
     // our search query is mobile_number (the name of the column in the reservations table)
     // the search value is our mobileNumber state
-    listReservations({ mobile_number: mobileNumber }, abortController.signal)
+    listReservations({ mobile_number }, abortController.signal)
       .then(setReservations)
+      .then(console.log(reservations))
       .catch(setError);
 
     return () => abortController.abort();

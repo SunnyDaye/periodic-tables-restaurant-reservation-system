@@ -17,25 +17,25 @@ function Dashboard({
   reservationsToDisplayError,
   tables,
   tablesError,
-  setRerender,
   loadDashboard,
 }) {
+  
   const history = useHistory();
   // const isToday = (date == today() || !date);
   // const reservationsToDisplay = (isToday) ? reservations.filter((res) => res.reservation_date == today()): reservations;
-  console.log("Dashboard entered");
   const reservationsList = () => {
     return reservationsToDisplay.map((reservation) => (
       <ReservationEntry
         key={reservation.reservation_id}
         reservation={reservation}
+        loadDashboard={loadDashboard}
       />
     ));
   };
 
   const tablesList = () => {
     return tables.map((table) => (
-      <TableEntry key={table.table_id} table={table} setRerender={setRerender} loadDashboard={loadDashboard}/>
+      <TableEntry key={table.table_id} table={table} loadDashboard={loadDashboard}/>
     ));
   };
 

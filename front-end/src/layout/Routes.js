@@ -20,36 +20,37 @@ import Search from "../search/Search";
  */
 function Routes() {
   const query = useQuery();
-  const date = (query.get("date")) ? query.get("date") : today();
-
+  const date = query.get("date") ? query.get("date") : today();
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
-  const [reservationsToDisplay, setReservationsToDisplay] = useState([]); 
-  const [reservationsToDisplayError, setReservationsToDisplayError] = useState([]);
+  const [reservationsToDisplay, setReservationsToDisplay] = useState([]);
+  const [reservationsToDisplayError, setReservationsToDisplayError] = useState(
+    []
+  );
 
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
 
-  const [rerender,setRerender] = useState(false);
+  const [rerender, setRerender] = useState(false);
 
-  useEffect(loadDashboard, [date, rerender]);
+  useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
+
     listReservations({}, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+
     listReservations({ date }, abortController.signal)
       .then(setReservationsToDisplay)
       .catch(setReservationsToDisplayError);
-    listTables(abortController.signal)
-    .then(setTables)
-    .catch(setTablesError);
+      
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
 
-    console.log("When dashboard loads, reservations look like this: ",reservations);
     return () => abortController.abort();
   }
 
@@ -62,10 +63,15 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/reservations/new">
-        <NewReservation setRerender={setRerender}/>
+        <NewReservation loadDashboard={loadDashboard} />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
-        <SeatReservation reservations={reservations} setReservations={setReservations} tables={tables} setRerender={setRerender}/>
+        <SeatReservation
+          reservations={reservations}
+          setReservations={setReservations}
+          tables={tables}
+          loadDashboard={loadDashboard}
+        />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/edit">
         <NewReservation edit={true} reservations={reservations} />
@@ -74,7 +80,7 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/tables/new">
-        <NewTable setRerender={setRerender} />
+        <NewTable loadDashboard={loadDashboard} />
       </Route>
       <Route exact={true} path="/search">
         <Search />

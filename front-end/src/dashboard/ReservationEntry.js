@@ -1,8 +1,8 @@
 import React from "react";
-
+import {changeReservationStatus} from "../utils/api";
 // note that i pass in a reservation object as a prop:
 
-export default function ReservationEntry({ reservation }) {
+export default function ReservationEntry({ reservation, loadDashboard}) {
   function handleCancel() {
     // revisiting our friend window.confirm:
     if (
@@ -11,8 +11,13 @@ export default function ReservationEntry({ reservation }) {
       )
     ) {
       // api call will go here eventually
+      const abortController = new AbortController();
 
-      window.location.reload();
+			changeReservationStatus(reservation.reservation_id, "cancelled", abortController.signal)
+				.then(loadDashboard);
+
+			return () => abortController.abort();
+      // window.location.reload();
     }
   }
   // if the reservation is finished, we do not want it to be shown on the dashboard
@@ -47,7 +52,7 @@ export default function ReservationEntry({ reservation }) {
         </button>
       </td>
 
-      {reservation.status === "booked" && (
+      {(reservation.status === "booked") && (
         <td>
           <a href={`/reservations/${reservation.reservation_id}/seat`}>
             <button type="button">Seat</button>
