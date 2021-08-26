@@ -11,6 +11,7 @@ import NewReservation from "../reservations/NewReservation";
 import NewTable from "../tables/NewTable";
 import SeatReservation from "../reservations/SeatReservation";
 import Search from "../search/Search";
+import ReservationWatcher from "./ReservationWatcher";
 /**
  * Defines all the routes for the application.
  *
@@ -48,6 +49,7 @@ function Routes() {
   }
 
   return (
+    <React.Fragment>
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
@@ -95,6 +97,8 @@ function Routes() {
         <NotFound />
       </Route>
     </Switch>
+    <ReservationWatcher reservations={reservations}/>
+    </React.Fragment>
   );
 }
 

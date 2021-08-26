@@ -6,7 +6,9 @@
   min-width: 600px;
 }
 
-.watcher {
-  margin: auto;
+.watcher{
+  margin: 10px auto;
+  bottom: 0;
+  position: absolute;
 }
 

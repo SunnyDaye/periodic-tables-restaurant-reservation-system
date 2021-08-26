@@ -6,7 +6,7 @@ import ReservationEntry from "./ReservationEntry";
 import TableEntry from "./TableEntry";
 
 import "./Dashboard.css";
-import {useTimer, useTime} from 'react-timer-hook';
+
 /**
  * Defines the dashboard page.
  * @param date

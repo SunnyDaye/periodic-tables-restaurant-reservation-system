@@ -130,7 +130,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
       foundErrors.push({ message: "Date required" });
     if (!formData.reservation_time || formData.reservation_time === "")
       foundErrors.push({ message: "Time required" });
-    setErrors([...errors, ...foundErrors]);
+    setErrors(foundErrors);
     return foundErrors.length === 0;
   }
 
@@ -160,6 +160,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
   }
   console.log("Loading is", loading);
   console.log("Deny edit", denyEdit);
+  console.log(errors);
   /*--------------------VISUALS---------------------------*/
 
   //If the loading state is still true at the time of render, the reservation is outdated

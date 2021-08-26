@@ -1,7 +1,6 @@
 import React from "react";
 import Menu from "./Menu";
 import Routes from "./Routes";
-import ReservationWatcher from "./ReservationWatcher";
 
 import "./Layout.css";
 
@@ -20,12 +19,8 @@ function Layout() {
           <Menu />
         </div>
         <div className="col">
-          <div className="row h-75">
+          <div className="row h-100 m-0 p-0">
             <Routes />
-          </div>
-
-          <div className="row ">
-            <ReservationWatcher />
           </div>
         </div>
       </div>
