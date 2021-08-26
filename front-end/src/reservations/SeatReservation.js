@@ -27,7 +27,7 @@ export default function SeatReservation({
 
   // submit handler does nothing as of yet
   function handleSubmit(event) {
-    console.log("reservations during seating:", reservations);
+   
     event.preventDefault();
     const abortController = new AbortController();
 

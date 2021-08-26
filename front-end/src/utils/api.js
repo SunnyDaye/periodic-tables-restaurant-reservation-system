@@ -112,6 +112,13 @@ export async function createTable(table, signal) {
 
   return await fetchJson(url, { headers, signal, method: "POST", body }, []);
 }
+export async function editTable(table_id, table, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}`;
+
+  const body = JSON.stringify({ data: table });
+
+  return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
+}
 //TODO-PUT request to API_BASE_URL/tables/:table_id/seat
 export async function occupyTable(reservation_id, table_id, signal) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;

@@ -146,6 +146,12 @@ async function destroy(req, res) {
   res.status(200).json({ data });
 }
 
+async function edit(req, res){
+  const response = await service.edit(req.params.table_id,req.body.data);
+  const data = await service.read(req.params.table_id);
+  res.status(200).json({data});
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [validateBody, asyncErrorBoundary(create)],
@@ -157,5 +163,6 @@ module.exports = {
     checkIfAlreadySeated,
     asyncErrorBoundary(update),
   ],
+  edit: [validateTableId, validateBody, asyncErrorBoundary(edit)],
   destroy: [validateTableId, validateSeatedTable, asyncErrorBoundary(destroy)],
 };

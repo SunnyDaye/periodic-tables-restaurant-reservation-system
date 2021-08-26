@@ -28,10 +28,16 @@ function changeTableStatus(table_id, reservation_id, status) { // to free, set r
         .update({ reservation_id , status });
 }
 
+function edit(table_id, table){
+	return knex("tables")
+		.where({table_id: table_id})
+		.update({...table});
+}
+
 module.exports = {
 	list,
 	create,
 	read,
 	changeTableStatus,
-
+	edit,
 }

@@ -24,7 +24,7 @@ export default function ReservationEntry({
       ).then(loadDashboard);
 
       return () => abortController.abort(); 
-    }
+    }  
   }
   // if the reservation is finished, we do not want it to be shown on the dashboard
   if (!reservation || reservation.status === "finished") return null;
@@ -47,6 +47,7 @@ export default function ReservationEntry({
         </a>
       </td>
 
+      {!reservation.status === "seated" && (
       <td>
         {/* the cancel button requires a data-reservation-id-cancel attribute for the tests */}
         <button
@@ -57,6 +58,7 @@ export default function ReservationEntry({
           Cancel
         </button>
       </td>
+      )}
 
       {reservation.status === "booked" && (
         <td>

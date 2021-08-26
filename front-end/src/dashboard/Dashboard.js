@@ -18,10 +18,9 @@ function Dashboard({
   tablesError,
   loadDashboard,
 }) {
-  // useEffect(loadDashboard,[]);
+  
   const history = useHistory();
-  // const isToday = (date == today() || !date);
-  // const reservationsToDisplay = (isToday) ? reservations.filter((res) => res.reservation_date == today()): reservations;
+  
   const reservationsList = () => {
     return reservations.map((reservation) => (
       <ReservationEntry
@@ -38,7 +37,7 @@ function Dashboard({
       <TableEntry key={table.table_id} table={table} loadDashboard={loadDashboard}/>
     ));
   };
-  console.log(reservationsError);
+  console.log("Tables looks like", tables);
   
   return (
     <main>
@@ -61,7 +60,6 @@ function Dashboard({
             <th scope="col">Status</th>
             <th scope="col">Edit</th>
             <th scope="col">Cancel</th>
-            <th scope="col">Seat Table</th>
           </tr>
         </thead>
 
@@ -80,6 +78,8 @@ function Dashboard({
             <th scope="col">Table Name</th>
             <th scope="col">Capacity</th>
             <th scope="col">Status</th>
+            <th scope="col">Occupant Reservation ID</th>
+            <th scope="col">Edit</th>
           </tr>
         </thead>
 

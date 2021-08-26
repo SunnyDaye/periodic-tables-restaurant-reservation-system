@@ -1,6 +1,9 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { freeTable, changeReservationStatus,listReservations } from "../utils/api";
+import {
+  freeTable,
+  changeReservationStatus,
+} from "../utils/api";
 
 export default function TableEntry({ table, loadDashboard }) {
   const history = useHistory();
@@ -15,10 +18,16 @@ export default function TableEntry({ table, loadDashboard }) {
     ) {
       const abortController = new AbortController();
       // delete request here, we will add this later
-      freeTable(table.table_id,abortController.signal)
-      .then(changeReservationStatus(table.reservation_id,"finished",abortController.signal))
-      .then(loadDashboard)
-      .catch(console.error);
+      freeTable(table.table_id, abortController.signal)
+        .then(
+          changeReservationStatus(
+            table.reservation_id,
+            "finished",
+            abortController.signal
+          )
+        )
+        .then(loadDashboard)
+        .catch(console.error);
 
       return () => abortController.abort();
     }
@@ -32,6 +41,13 @@ export default function TableEntry({ table, loadDashboard }) {
 
       {/* the instructions say the tests are looking for this data-table-id-status, so be sure to include it. */}
       <td data-table-id-status={table.table_id}>{table.status}</td>
+
+      <td>{table.reservation_id}</td>
+      <td>
+        <a href={`/tables/${table.table_id}/edit`}>
+          <button type="button">Edit</button>
+        </a>
+      </td>
       {table.status === "occupied" && (
         <td data-table-id-finish={table.table_id}>
           <button onClick={handleFinish} type="button">

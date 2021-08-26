@@ -1,10 +1,9 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createReservation, editReservation } from "../utils/api";
 
 export default function NewReservation({ edit, reservations, loadDashboard }) {
-  
   /*---------------------HOOKS------------------------*/
   const history = useHistory();
   const { reservation_id } = useParams();
@@ -20,39 +19,49 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     people: 0,
   });
   const [errors, setErrors] = useState([]);
+  const [denyEdit, setDenyEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(editMode,[edit, reservation_id, reservations]);
+  useEffect(editMode, [edit, reservation_id, reservations]);
 
-  function editMode(){
+  function editMode() {
     if (edit) {
-      
       if (!reservations || !reservation_id) return null;
-  
+
       // let's try to find the corresponding reservation:
       const foundReservation = reservations.find(
         (reservation) => reservation.reservation_id === Number(reservation_id)
       );
-  
-      // if it doesn't exist, or the reservation is booked, we cannot edit.
-      if (!foundReservation || foundReservation.status !== "booked") {
-        return <p>Only booked reservations can be edited.</p>;
+        console.log("foundRes:",foundReservation);
+      // if it doesn't exist, or the reservation is seated, we cannot edit.
+      if (foundReservation) {
+        
+        if (foundReservation.status === "seated") {
+          console.log("Will deny edit");
+          setDenyEdit(true);
+          setLoading(false);
+        } else {
+          setLoading(false);
+          setFormData({
+            first_name: foundReservation.first_name,
+            last_name: foundReservation.last_name,
+            mobile_number: foundReservation.mobile_number,
+            reservation_date: foundReservation.reservation_date,
+            reservation_time: foundReservation.reservation_time,
+            people: foundReservation.people,
+            reservation_id: foundReservation.reservation_id,
+          });
+        }
+      }else{
+        setLoading(false);
+        setDenyEdit(true);
       }
-      setFormData({
-        first_name: foundReservation.first_name,
-        last_name: foundReservation.last_name,
-        mobile_number: foundReservation.mobile_number,
-        reservation_date: foundReservation.reservation_date,
-        reservation_time: foundReservation.reservation_time,
-        people: foundReservation.people,
-        reservation_id: foundReservation.reservation_id,
-      });
+    }else{
+      setLoading(false);
     }
-    
   }
 
   /*------------------------VALIDATION----------------------*/
-
-  
 
   function validateDate() {
     const reservationDate = new Date(
@@ -62,7 +71,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     const foundErrors = [];
     if (formData.reservation_date.indexOf("-") > 4)
       foundErrors.push({ message: "Use correct data format" });
-      
+
     if (reservationDate.getDay() === 2)
       foundErrors.push({
         message:
@@ -71,7 +80,6 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     if (reservationDate < todaysDate)
       foundErrors.push({ message: "Uh Oh! The date of reservation has past." });
 
-    
     if (
       reservationDate.getHours() < 10 ||
       (reservationDate.getHours() === 10 && reservationDate.getMinutes() < 30)
@@ -135,88 +143,98 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     //You will need to make a POST to reservations here
     if (validateDate()) {
       const abortController = new AbortController();
-
-      if(edit) {
-				editReservation(reservation_id, formData, abortController.signal)
-					.then(loadDashboard)
+      console.log("About to make put req");
+      if (edit) {
+        editReservation(reservation_id, formData, abortController.signal)
+          .then(loadDashboard)
           .then(history.goBack())
-					.catch(console.error);
-			}else{
+          .catch(console.error);
+      } else {
         createReservation(formData, abortController.signal) //formdata is the body
-        .then(loadDashboard)
-        .then(() =>
-          history.push(`/dashboard?date=${formData.reservation_date}`)
-        ) //force rerender
-        .catch(console.error); //catch erros
-      //Take us back to the dashboard with reservations of the data given by the new reservation
+          .then(loadDashboard)
+          .then(() =>
+            history.push(`/dashboard?date=${formData.reservation_date}`)
+          )
+          .catch(console.error); //catch erros
+        //Take us back to the dashboard with reservations of the data given by the new reservation
       }
       return () => abortController.abort();
     }
-
   }
-
+  console.log("Loading is", loading);
+  console.log("Deny edit", denyEdit);
   /*--------------------VISUALS---------------------------*/
   return (
-    <form>
-      {errorsMapped()}
-      <label htmlFor="first_name">First Name:&nbsp;</label>
-      <input
-        name="first_name"
-        id="first_name"
-        type="text"
-        onChange={handleChange}
-        value={formData.first_name}
-        required
-      />
-      <label htmlFor="last_name">Last Name:&nbsp;</label>
-      <input
-        name="last_name"
-        type="text"
-        id="last_name"
-        onChange={handleChange}
-        value={formData.last_name}
-        required
-      />
-      <label htmlFor="mobile_number">Mobile Number:&nbsp;</label>
-      <input
-        name="mobile_number"
-        type="tel"
-        id="mobile_number"
-        onChange={handleChange}
-        value={formData.mobile_number}
-        required
-      />
-      <label htmlFor="reservation_date">Date:&nbsp;</label>
-      <input
-        name="reservation_date"
-        type="date"
-        onChange={handleChange}
-        value={formData.reservation_date}
-        required
-      />
-      <label htmlFor="reservation_time">Time:&nbsp;</label>
-      <input
-        name="reservation_time"
-        type="time"
-        onChange={handleChange}
-        value={formData.reservation_time}
-        required
-      />
-      <label htmlFor="people">Party size:&nbsp;</label>
-      <input
-        name="people"
-        type="number"
-        placeholder="0"
-        onChange={handleChange}
-        value={formData.people}
-        required
-      />
-      <button type="button" onClick={history.goBack}>
-        Cancel
-      </button>
-      <button type="submit" onClick={handleSubmit}>
-        Submit
-      </button>
-    </form>
+    <React.Fragment>
+      {!loading ? (
+        !denyEdit ? (
+          <form>
+            {errorsMapped()}
+            <label htmlFor="first_name">First Name:&nbsp;</label>
+            <input
+              name="first_name"
+              id="first_name"
+              type="text"
+              onChange={handleChange}
+              value={formData.first_name}
+              required
+            />
+            <label htmlFor="last_name">Last Name:&nbsp;</label>
+            <input
+              name="last_name"
+              type="text"
+              id="last_name"
+              onChange={handleChange}
+              value={formData.last_name}
+              required
+            />
+            <label htmlFor="mobile_number">Mobile Number:&nbsp;</label>
+            <input
+              name="mobile_number"
+              type="tel"
+              id="mobile_number"
+              onChange={handleChange}
+              value={formData.mobile_number}
+              required
+            />
+            <label htmlFor="reservation_date">Date:&nbsp;</label>
+            <input
+              name="reservation_date"
+              type="date"
+              onChange={handleChange}
+              value={formData.reservation_date}
+              required
+            />
+            <label htmlFor="reservation_time">Time:&nbsp;</label>
+            <input
+              name="reservation_time"
+              type="time"
+              onChange={handleChange}
+              value={formData.reservation_time}
+              required
+            />
+            <label htmlFor="people">Party size:&nbsp;</label>
+            <input
+              name="people"
+              type="number"
+              placeholder="0"
+              onChange={handleChange}
+              value={formData.people}
+              required
+            />
+            <button type="button" onClick={history.goBack}>
+              Cancel
+            </button>
+            <button type="submit" onClick={handleSubmit}>
+              Submit
+            </button>
+          </form>
+        ) : (
+          <h1>This reservation is already seated or outdated.</h1>
+        )
+      ) : (
+        <h3>Loading...</h3>
+      )}
+    </React.Fragment>
   );
 }

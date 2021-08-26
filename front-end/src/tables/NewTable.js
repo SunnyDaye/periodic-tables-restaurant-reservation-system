@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { createTable } from "../utils/api";
+import { createTable, editTable } from "../utils/api";
 
-export default function NewTable({ loadDashboard }) {
+export default function NewTable({ edit, tables, loadDashboard }) {
   const history = useHistory();
+  const { table_id } = useParams();
 
   const [error, setError] = useState(null);
 
@@ -13,19 +14,62 @@ export default function NewTable({ loadDashboard }) {
     table_name: "",
     capacity: null,
   });
+  const [denyEdit, setDenyEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(editMode, [edit, table_id, tables]);
+
+  function editMode() {
+    if (edit) {
+      if (!tables || !table_id) return null;
+
+      // let's try to find the corresponding table:
+     
+      const foundTable = tables.find(
+        (table) => table.table_id === Number(table_id)
+      );
+      console.log("Table found", foundTable);
+      // if it doesn't exist, or the table is occupied, we cannot edit.
+      if(foundTable){
+      if (foundTable.status === "occupied") {
+        console.log("Will deny edit");
+        setDenyEdit(true);
+        setLoading(false);
+      }else{
+        setLoading(false);
+        setFormData({
+        table_name: foundTable.table_name,
+        capacity: foundTable.capacity,
+      });
+      }
+    }
+      
+    }else{
+      setLoading(false);
+    }
+  }
 
   function handleChange({ target }) {
     setFormData({ ...formData, [target.name]: target.value });
-	if(target.name === "capacity") setFormData({ ...formData,[target.name]: parseInt(target.value)});
+    if (target.name === "capacity")
+      setFormData({ ...formData, [target.name]: parseInt(target.value) });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     const abortController = new AbortController();
     if (validateFields()) {
-      createTable(formData, abortController.signal)
-        .then(loadDashboard)
-        .catch(console.error);
+      if (edit) {
+        editTable(table_id, formData, abortController.signal)
+          .then(loadDashboard)
+          .then(history.goBack())
+          .catch(console.error);
+      } else {
+        createTable(formData, abortController.signal)
+          .then(loadDashboard)
+          .catch(console.error);
+      }
+
       history.push(`/dashboard`);
     }
   }
@@ -43,9 +87,13 @@ export default function NewTable({ loadDashboard }) {
 
     return foundError === null;
   }
-
+  console.log("Loading is", loading);
+  console.log('Deny edit', denyEdit);
   return (
-    <form>
+    <React.Fragment>
+
+    { !loading ? (!denyEdit ? 
+      <form>
       <ErrorAlert error={error} />
 
       <label htmlFor="table_name">Table Name:&nbsp;</label>
@@ -76,6 +124,8 @@ export default function NewTable({ loadDashboard }) {
       <button type="button" onClick={history.goBack}>
         Cancel
       </button>
-    </form>
+    </form>: <h1>This table is occupied. You cannot edit.</h1>) : <h3>Loading...</h3>
+    }
+    </React.Fragment>
   );
 }

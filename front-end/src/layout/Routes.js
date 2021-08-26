@@ -67,13 +67,16 @@ function Routes() {
         />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/edit">
-        <NewReservation edit={true} reservations={reservations} />
+        <NewReservation edit={true} reservations={reservations} loadDashboard={loadDashboard}/>
       </Route>
       <Route exact={true} path="/tables">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/tables/new">
         <NewTable loadDashboard={loadDashboard} />
+      </Route>
+      <Route exact={true} path="/tables/:table_id/edit">
+        <NewTable edit={true} tables={tables} loadDashboard={loadDashboard} />
       </Route>
       <Route exact={true} path="/search">
         <Search loadDashboard={loadDashboard} />
