@@ -5,13 +5,7 @@ import { changeReservationStatus } from "../utils/api";
 export default function ReservationEntry({
   reservation,
   loadDashboard,
-  fromDash,
 }) {
-  useEffect(() => {
-    if (fromDash) {
-      loadDashboard();
-    }
-  }, []);
 
   function handleCancel() {
     // revisiting our friend window.confirm:
@@ -28,9 +22,8 @@ export default function ReservationEntry({
         "cancelled",
         abortController.signal
       ).then(loadDashboard);
-        window.location.reload();
-      return () => abortController.abort();
-      // window.location.reload();
+
+      return () => abortController.abort(); 
     }
   }
   // if the reservation is finished, we do not want it to be shown on the dashboard

@@ -62,6 +62,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     const foundErrors = [];
     if (formData.reservation_date.indexOf("-") > 4)
       foundErrors.push({ message: "Use correct data format" });
+      
     if (reservationDate.getDay() === 2)
       foundErrors.push({
         message:
@@ -70,11 +71,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     if (reservationDate < todaysDate)
       foundErrors.push({ message: "Uh Oh! The date of reservation has past." });
 
-    console.log(
-      "Hours and minutes:",
-      reservationDate.getHours(),
-      reservationDate.getMinutes()
-    );
+    
     if (
       reservationDate.getHours() < 10 ||
       (reservationDate.getHours() === 10 && reservationDate.getMinutes() < 30)

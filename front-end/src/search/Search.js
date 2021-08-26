@@ -20,7 +20,6 @@ export default function Search(loadDashboard) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log("Search submitting. Value is", mobileNumber);
     // we will be adding our api call here
     const abortController = new AbortController();
 

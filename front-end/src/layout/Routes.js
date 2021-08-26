@@ -23,12 +23,9 @@ function Routes() {
   const date = query.get("date") ? query.get("date") : today();
 
   const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
+  const [reservationsError, setReservationsError] = useState([]);
 
-  const [reservationsToDisplay, setReservationsToDisplay] = useState([]);
-  const [reservationsToDisplayError, setReservationsToDisplayError] = useState(
-    []
-  );
+
 
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
@@ -41,13 +38,9 @@ function Routes() {
     const abortController = new AbortController();
     setReservationsError(null);
 
-    listReservations({}, abortController.signal)
+    listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
-
-    listReservations({ date }, abortController.signal)
-      .then(setReservationsToDisplay)
-      .catch(setReservationsToDisplayError);
       
     listTables(abortController.signal).then(setTables).catch(setTablesError);
 
@@ -89,8 +82,7 @@ function Routes() {
         <Dashboard
           date={date}
           reservations={reservations}
-          reservationsToDisplay={reservationsToDisplay}
-          reservationsToDisplayError={reservationsToDisplayError}
+          reservationsError={reservationsError}
           tables={tables}
           tablesError={tablesError}
           loadDashboard={loadDashboard}

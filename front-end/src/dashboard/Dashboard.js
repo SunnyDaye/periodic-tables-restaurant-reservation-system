@@ -13,8 +13,7 @@ import TableEntry from "./TableEntry";
 function Dashboard({
   date,
   reservations,
-  reservationsToDisplay,
-  reservationsToDisplayError,
+  reservationsError,
   tables,
   tablesError,
   loadDashboard,
@@ -24,12 +23,12 @@ function Dashboard({
   // const isToday = (date == today() || !date);
   // const reservationsToDisplay = (isToday) ? reservations.filter((res) => res.reservation_date == today()): reservations;
   const reservationsList = () => {
-    return reservationsToDisplay.map((reservation) => (
+    return reservations.map((reservation) => (
       <ReservationEntry
         key={reservation.reservation_id}
         reservation={reservation}
         loadDashboard={loadDashboard}
-        fromDash={true}
+
       />
     ));
   };
@@ -39,7 +38,7 @@ function Dashboard({
       <TableEntry key={table.table_id} table={table} loadDashboard={loadDashboard}/>
     ));
   };
-
+  console.log(reservationsError);
   
   return (
     <main>
@@ -47,7 +46,7 @@ function Dashboard({
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-      {(reservationsToDisplayError.length > 0) ? <ErrorAlert error={reservationsToDisplayError} />: null} 
+      {(reservationsError && reservationsError.length > 0) ? <ErrorAlert error={reservationsError} />: null} 
       <table className="table">
         {/* "thead" is the table header, meant for the column labels */}
         <thead>
