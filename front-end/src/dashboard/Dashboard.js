@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
 import ReservationEntry from "./ReservationEntry";
 import TableEntry from "./TableEntry";
+
+import "./Dashboard.css";
+import {useTimer, useTime} from 'react-timer-hook';
 /**
  * Defines the dashboard page.
  * @param date
@@ -40,9 +43,9 @@ function Dashboard({
   console.log("Tables looks like", tables);
   
   return (
-    <main>
+    <main className="w-100">
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
+      <div className="container-fluid d-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
       {(reservationsError && reservationsError.length > 0) ? <ErrorAlert error={reservationsError} />: null} 
@@ -85,8 +88,8 @@ function Dashboard({
 
         <tbody>{tablesList()}</tbody>
       </table>
-
-      <button
+      <div className = "dayNavigator d-flex">
+        <button
         type="button"
         onClick={() => history.push(`/dashboard?date=${previous(date)}`)}
       >
@@ -104,6 +107,8 @@ function Dashboard({
       >
         Next
       </button>
+      </div>
+      
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import Menu from "./Menu";
 import Routes from "./Routes";
+import ReservationWatcher from "./ReservationWatcher";
 
 import "./Layout.css";
 
@@ -13,13 +14,19 @@ import "./Layout.css";
  */
 function Layout() {
   return (
-    <div className="container-fluid">
+    <div className="container-fluid vh-100">
       <div className="row h-100">
-        <div className="col-md-2 side-bar">
+        <div className="col-xl-2 side-bar">
           <Menu />
         </div>
         <div className="col">
-          <Routes />
+          <div className="row h-75">
+            <Routes />
+          </div>
+
+          <div className="row ">
+            <ReservationWatcher />
+          </div>
         </div>
       </div>
     </div>

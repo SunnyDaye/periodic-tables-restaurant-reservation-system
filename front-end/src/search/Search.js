@@ -18,6 +18,7 @@ export default function Search(loadDashboard) {
     setMobileNumber(target.value);
   }
 
+
   function handleSubmit(event) {
     event.preventDefault();
     // we will be adding our api call here
@@ -51,7 +52,7 @@ export default function Search(loadDashboard) {
   };
 
   return (
-    <div>
+    <div className="w-100">
       <form>
         <ErrorAlert error={error} />
 

@@ -1,4 +1,12 @@
+.container-fluid {
+  min-width: 600px;
+}
 .side-bar {
   background-color: #393a44;
-  min-width: 200px;
+  min-width: 600px;
 }
+
+.watcher {
+  margin: auto;
+}
+

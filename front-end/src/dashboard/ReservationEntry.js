@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import {useLocation} from "react-router-dom";
 import { changeReservationStatus } from "../utils/api";
 // note that i pass in a reservation object as a prop:
 
@@ -7,6 +8,8 @@ export default function ReservationEntry({
   loadDashboard,
 }) {
 
+  const {pathname} = useLocation();
+  
   function handleCancel() {
     // revisiting our friend window.confirm:
     if (
@@ -21,8 +24,12 @@ export default function ReservationEntry({
         reservation.reservation_id,
         "cancelled",
         abortController.signal
-      ).then(loadDashboard);
-
+      ).then(loadDashboard)
+      .then(() => {
+        window.alert("Reservation deleted");
+        if(pathname === "/search")window.location.reload();
+      })
+      
       return () => abortController.abort(); 
     }  
   }
