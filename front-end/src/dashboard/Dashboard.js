@@ -49,11 +49,11 @@ function Dashboard({
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
       {(reservationsError && reservationsError.length > 0) ? <ErrorAlert error={reservationsError} />: null} 
-      <table className="table">
+      <table className="table table-striped">
         {/* "thead" is the table header, meant for the column labels */}
         <thead>
           {/* "tr" means table row */}
-          <tr>
+          <tr className="table-success">
             <th scope="col">ID</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
@@ -63,6 +63,7 @@ function Dashboard({
             <th scope="col">Status</th>
             <th scope="col">Edit</th>
             <th scope="col">Cancel</th>
+            <th scope="col">Seat</th>
           </tr>
         </thead>
 
@@ -74,9 +75,9 @@ function Dashboard({
 
       <ErrorAlert error={tablesError} />
 
-      <table className="table">
+      <table className="table table-striped">
         <thead>
-          <tr>
+          <tr className="table-primary">
             <th scope="col">ID</th>
             <th scope="col">Table Name</th>
             <th scope="col">Capacity</th>
@@ -89,26 +90,29 @@ function Dashboard({
         <tbody>{tablesList()}</tbody>
       </table>
       <div className = "dayNavigator d-flex">
-        <button
+        <button className="btn btn-warning m-1"
         type="button"
         onClick={() => history.push(`/dashboard?date=${previous(date)}`)}
       >
         Previous
       </button>
-      <button
+      <button className="btn btn-secondary m-1"
         type="button"
         onClick={() => history.push(`/dashboard?date=${today()}`)}
       >
         Today
       </button>
-      <button
+      <button className="btn btn-info m-1"
         type="button"
         onClick={() => history.push(`/dashboard?date=${next(date)}`)}
       >
         Next
       </button>
       </div>
+      <div>
+        <p>This chart is static and is unfinished. The development of a dynamic chart is in progress...</p>
       
+      </div>
     </main>
   );
 }

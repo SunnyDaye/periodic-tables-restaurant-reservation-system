@@ -97,7 +97,7 @@ function Routes() {
         <NotFound />
       </Route>
     </Switch>
-    <ReservationWatcher reservations={reservations}/>
+    <ReservationWatcher reservations={reservations} loadDashboard={loadDashboard}/>
     </React.Fragment>
   );
 }

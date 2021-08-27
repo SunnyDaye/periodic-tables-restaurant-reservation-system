@@ -50,14 +50,14 @@ export default function ReservationEntry({
 
       <td>
         <a href={`/reservations/${reservation.reservation_id}/edit`}>
-          <button type="button">Edit</button>
+          <button className="btn btn-light" type="button">Edit</button>
         </a>
       </td>
 
       {reservation.status === "booked" && (
       <td>
         {/* the cancel button requires a data-reservation-id-cancel attribute for the tests */}
-        <button
+        <button className="btn btn-danger"
           type="button"
           onClick={handleCancel}
           data-reservation-id-cancel={reservation.reservation_id}
@@ -70,7 +70,7 @@ export default function ReservationEntry({
       {reservation.status === "booked" && (
         <td>
           <a href={`/reservations/${reservation.reservation_id}/seat`}>
-            <button type="button">Seat</button>
+            <button className="btn btn-dark"type="button">Seat</button>
           </a>
         </td>
       )}

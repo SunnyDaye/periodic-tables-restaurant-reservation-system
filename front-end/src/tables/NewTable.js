@@ -24,27 +24,26 @@ export default function NewTable({ edit, tables, loadDashboard }) {
       if (!tables || !table_id) return null;
 
       // let's try to find the corresponding table:
-     
+
       const foundTable = tables.find(
         (table) => table.table_id === Number(table_id)
       );
       console.log("Table found", foundTable);
       // if it doesn't exist, or the table is occupied, we cannot edit.
-      if(foundTable){
-      if (foundTable.status === "occupied") {
-        console.log("Will deny edit");
-        setDenyEdit(true);
-        setLoading(false);
-      }else{
-        setLoading(false);
-        setFormData({
-        table_name: foundTable.table_name,
-        capacity: foundTable.capacity,
-      });
+      if (foundTable) {
+        if (foundTable.status === "occupied") {
+          console.log("Will deny edit");
+          setDenyEdit(true);
+          setLoading(false);
+        } else {
+          setLoading(false);
+          setFormData({
+            table_name: foundTable.table_name,
+            capacity: foundTable.capacity,
+          });
+        }
       }
-    }
-      
-    }else{
+    } else {
       setLoading(false);
     }
   }
@@ -88,47 +87,74 @@ export default function NewTable({ edit, tables, loadDashboard }) {
     return foundError === null;
   }
   console.log("Loading is", loading);
-  console.log('Deny edit', denyEdit);
-
-
+  console.log("Deny edit", denyEdit);
 
   return (
     <React.Fragment>
+      {!loading ? (
+        !denyEdit ? (
+          <div className="container-fluid d-flex justify-content-center align-items-center">
+            <form>
+              <ErrorAlert error={error} />
+              <div className="row mb-3">
+                <label className="col-3 col-form-label" htmlFor="table_name">
+                  Table Name:&nbsp;
+                </label>
+                <div className="col-9">
+                  <input
+                    className="form-control"
+                    name="table_name"
+                    id="table_name"
+                    type="text"
+                    minLength="2"
+                    onChange={handleChange}
+                    value={formData.table_name}
+                    required
+                  />
+                </div>
+              </div>
 
-    { !loading ? (!denyEdit ? 
-      <form>
-      <ErrorAlert error={error} />
-
-      <label htmlFor="table_name">Table Name:&nbsp;</label>
-      <input
-        name="table_name"
-        id="table_name"
-        type="text"
-        minLength="2"
-        onChange={handleChange}
-        value={formData.table_name}
-        required
-      />
-
-      <label htmlFor="capacity">Capacity:&nbsp;</label>
-      <input
-        name="capacity"
-        id="capacity"
-        type="number"
-        min="1"
-        onChange={handleChange}
-        value={formData.capacity}
-        required
-      />
-
-      <button type="submit" onClick={handleSubmit}>
-        Submit
-      </button>
-      <button type="button" onClick={history.goBack}>
-        Cancel
-      </button>
-    </form>: <h1>This table is occupied. You cannot edit.</h1>) : <h3>Loading...</h3>
-    }
+              <div className="row mb-3">
+                <label className="col-3" htmlFor="capacity">
+                  Capacity:&nbsp;
+                </label>
+                <div className="col-9">
+                  <input
+                    className="form-control"
+                    name="capacity"
+                    id="capacity"
+                    type="number"
+                    min="1"
+                    onChange={handleChange}
+                    value={formData.capacity}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="row d-flex mb-3 justify-content-center">
+                <button
+                  className="btn btn-success m-1"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+                <button
+                  className="btn btn-danger m-1"
+                  type="button"
+                  onClick={history.goBack}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <h1>This table is occupied. You cannot edit.</h1>
+        )
+      ) : (
+        <h3>Loading...</h3>
+      )}
     </React.Fragment>
   );
 }

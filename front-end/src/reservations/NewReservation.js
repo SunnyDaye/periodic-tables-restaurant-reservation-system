@@ -32,10 +32,9 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
       const foundReservation = reservations.find(
         (reservation) => reservation.reservation_id === Number(reservation_id)
       );
-        console.log("foundRes:",foundReservation);
+      console.log("foundRes:", foundReservation);
       // if it doesn't exist, or the reservation is seated, we cannot edit.
       if (foundReservation) {
-        
         if (foundReservation.status === "seated") {
           console.log("Will deny edit");
           setDenyEdit(true);
@@ -53,7 +52,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
           });
         }
       }
-    }else{
+    } else {
       setLoading(false);
     }
   }
@@ -168,67 +167,126 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
     <React.Fragment>
       {!loading ? (
         !denyEdit ? (
+          <div className=" container-fluid d-flex justify-content-center align-items-center">
           <form>
             {errorsMapped()}
-            <label htmlFor="first_name">First Name:&nbsp;</label>
-            <input
-              name="first_name"
-              id="first_name"
-              type="text"
-              onChange={handleChange}
-              value={formData.first_name}
-              required
-            />
-            <label htmlFor="last_name">Last Name:&nbsp;</label>
-            <input
-              name="last_name"
-              type="text"
-              id="last_name"
-              onChange={handleChange}
-              value={formData.last_name}
-              required
-            />
-            <label htmlFor="mobile_number">Mobile Number:&nbsp;</label>
-            <input
-              name="mobile_number"
-              type="tel"
-              id="mobile_number"
-              onChange={handleChange}
-              value={formData.mobile_number}
-              required
-            />
-            <label htmlFor="reservation_date">Date:&nbsp;</label>
-            <input
-              name="reservation_date"
-              type="date"
-              onChange={handleChange}
-              value={formData.reservation_date}
-              required
-            />
-            <label htmlFor="reservation_time">Time:&nbsp;</label>
-            <input
-              name="reservation_time"
-              type="time"
-              onChange={handleChange}
-              value={formData.reservation_time}
-              required
-            />
-            <label htmlFor="people">Party size:&nbsp;</label>
-            <input
-              name="people"
-              type="number"
-              placeholder="0"
-              onChange={handleChange}
-              value={formData.people}
-              required
-            />
-            <button type="button" onClick={history.goBack}>
-              Cancel
-            </button>
-            <button type="submit" onClick={handleSubmit}>
-              Submit
-            </button>
+            <div className="row d-flex mb-3 justify-content-center">
+              <label className="col-2 col-form-label" htmlFor="first_name">
+                First Name:&nbsp;
+              </label>
+              <div className="col-10">
+                <input
+                  className="form-control"
+                  name="first_name"
+                  type="text"
+                  id="first_name"
+                  onChange={handleChange}
+                  value={formData.first_name}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="row mb-3">
+              <label className="col-2 col-form-label" htmlFor="last_name">
+                Last Name:&nbsp;
+              </label>
+              <div className="col-10">
+                <input
+                  className="form-control"
+                  name="last_name"
+                  type="text"
+                  id="last_name"
+                  onChange={handleChange}
+                  value={formData.last_name}
+                  required
+                />
+              </div>
+            </div>
+            <div className="row d-flex mb-3 justify-content-center">
+              <label className="col-2 col-form-label" htmlFor="mobile_number">
+                Mobile Number:&nbsp;
+              </label>
+              <div className="col-10">
+                <input
+                  className="form-control"
+                  name="mobile_number"
+                  type="tel"
+                  id="mobile_number"
+                  onChange={handleChange}
+                  value={formData.mobile_number}
+                  required
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <label
+                className="col-1 col-form-label"
+                htmlFor="reservation_date"
+              >
+                Date:&nbsp;
+              </label>
+              <div className="col-3">
+                <input
+                  className="form-control"
+                  name="reservation_date"
+                  type="date"
+                  onChange={handleChange}
+                  value={formData.reservation_date}
+                  required
+                />
+              </div>
+
+              <label
+                className="col-1 col-form-label"
+                htmlFor="reservation_time"
+              >
+                Time:&nbsp;
+              </label>
+              <div className="col-3">
+                <input
+                  className="form-control"
+                  name="reservation_time"
+                  type="time"
+                  onChange={handleChange}
+                  value={formData.reservation_time}
+                  required
+                />
+              </div>
+
+              <label className="col-1" htmlFor="people">
+                Party size:&nbsp;
+              </label>
+              <div className="col-3">
+                <input
+                  className="form-control"
+                  name="people"
+                  type="number"
+                  placeholder="0"
+                  onChange={handleChange}
+                  value={formData.people}
+                  required
+                />
+              </div>
+            </div>
+            <div className="row d-flex mb-3 justify-content-center">
+                <button
+                  className="btn btn-danger m-1"
+                  type="button"
+                  onClick={history.goBack}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-success m-1"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </div>
           </form>
+          </div>
         ) : (
           <h1>This reservation is already seated.</h1>
         )

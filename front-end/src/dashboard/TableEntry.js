@@ -45,12 +45,12 @@ export default function TableEntry({ table, loadDashboard }) {
       <td>{table.reservation_id}</td>
       <td>
         <a href={`/tables/${table.table_id}/edit`}>
-          <button type="button">Edit</button>
+          <button className="btn btn-light" type="button">Edit</button>
         </a>
       </td>
       {table.status === "occupied" && (
         <td data-table-id-finish={table.table_id}>
-          <button onClick={handleFinish} type="button">
+          <button className="btn btn-dark" onClick={handleFinish} type="button">
             Finish
           </button>
         </td>

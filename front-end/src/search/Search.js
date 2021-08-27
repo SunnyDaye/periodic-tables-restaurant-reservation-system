@@ -66,14 +66,14 @@ export default function Search(loadDashboard) {
           required
         />
 
-        <button type="submit" onClick={handleSubmit}>
+        <button className="btn btn-dark m-1" type="submit" onClick={handleSubmit}>
           Find
         </button>
       </form>
 
       <table class="table">
-        <thead class="thead-light">
-          <tr>
+        <thead>
+          <tr className="table-warning">
             <th scope="col">ID</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
