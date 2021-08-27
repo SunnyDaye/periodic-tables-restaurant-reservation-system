@@ -20,5 +20,36 @@ const points = data
       return `${x},${y}`;
     })
     .join(" ");
+
+    //Draw a line 
+    const Axis = ({ points }) => (
+        <polyline fill="none" stroke="#ccc" strokeWidth=".5" points={points} />
+      );                                                 
+
+    //What is an x axis? 
+    //How do you draw a horizontal accesss?
+
+
+    //Write minicomponenets to handle different parts of a chart
+    // return (
+    //     <svg
+    //       viewBox={`0 0 ${width} ${height}`}
+    //       //style={{ border: "px solid #ccc" }}
+    //     >
+    //       <XAxis />
+    //       <LabelsXAxis />
+    //       <YAxis />
+    //       <LabelsYAxis />
+    //       {numberOfVerticalGuides && <VerticalGuides />}
+    //       <HorizontalGuides />
+    
+    //       <polyline
+    //         fill="none"
+    //         stroke=""
+    //         strokeWidth={STROKE}
+    //         points={points}
+    //       />
+    //     </svg>
+    //   );
 }
 
