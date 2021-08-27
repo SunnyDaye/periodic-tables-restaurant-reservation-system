@@ -47,7 +47,7 @@ export default function ReservationEntry({
         </a>
       </td>
 
-      {!reservation.status === "seated" && (
+      {reservation.status === "booked" && (
       <td>
         {/* the cancel button requires a data-reservation-id-cancel attribute for the tests */}
         <button

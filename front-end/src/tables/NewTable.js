@@ -89,6 +89,9 @@ export default function NewTable({ edit, tables, loadDashboard }) {
   }
   console.log("Loading is", loading);
   console.log('Deny edit', denyEdit);
+
+
+
   return (
     <React.Fragment>
 

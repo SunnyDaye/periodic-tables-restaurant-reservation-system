@@ -52,9 +52,6 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
             reservation_id: foundReservation.reservation_id,
           });
         }
-      }else{
-        setLoading(false);
-        setDenyEdit(true);
       }
     }else{
       setLoading(false);
@@ -164,6 +161,8 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
   console.log("Loading is", loading);
   console.log("Deny edit", denyEdit);
   /*--------------------VISUALS---------------------------*/
+
+  //If the loading state is still true at the time of render, the reservation is outdated
   return (
     <React.Fragment>
       {!loading ? (
@@ -230,10 +229,10 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
             </button>
           </form>
         ) : (
-          <h1>This reservation is already seated or outdated.</h1>
+          <h1>This reservation is already seated.</h1>
         )
       ) : (
-        <h3>Loading...</h3>
+        <h3>Reservation is outdated.</h3>
       )}
     </React.Fragment>
   );
