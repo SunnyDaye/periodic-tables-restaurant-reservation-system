@@ -50,25 +50,6 @@ function validateBody(req, res, next) {
 	
 }
 
-function validateDate(req, res, next) {
-	const reserveDate = new Date(`${req.body.data.reservation_date}T${req.body.data.reservation_time}:00.000`);
-	const todaysDate = new Date();
-
-  switch(true){
-    case (reserveDate.getDay() === 2):
-      return next({ status: 400, message: "'reservation_date' field: restauraunt is closed on tuesday" });
-    case (reserveDate < todaysDate):
-      return next({ status: 400, message: "'reservation_date' and 'reservation_time' field must be in the future" });
-    case (reserveDate.getHours() < 10 || (reserveDate.getHours() === 10 && reserveDate.getMinutes() < 30)):
-      return next({ status: 400, message: "'reservation_time' field: restaurant is not open until 10:30AM" });
-    case (reserveDate.getHours() > 22 || (reserveDate.getHours() === 22 && reserveDate.getMinutes() >= 30)):
-      return next({ status: 400, message: "'reservation_time' field: restaurant is closed after 10:30PM" });
-    case (reserveDate.getHours() > 21 || (reserveDate.getHours() === 21 && reserveDate.getMinutes() > 30)):
-      return next({ status: 400, message: "'reservation_time' field: reservation must be made at least an hour before closing (10:30PM)" });
-    default: next();
-  }
-	
-}
 /*
 * Creat handler for reservations
 */
@@ -135,9 +116,9 @@ async function edit(req, res) {
 
 module.exports = {
 	list: asyncErrorBoundary(list),
-	create: [validateBody, validateDate, asyncErrorBoundary(create)],
+	create: [validateBody, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(validateReservationId),read],
   update: [asyncErrorBoundary(validateReservationId),checkStatus,asyncErrorBoundary(update)],
-  edit: [validateReservationId, validateBody, validateDate, asyncErrorBoundary(edit)],
+  edit: [validateReservationId, validateBody, asyncErrorBoundary(edit)],
   validateReservationId: asyncErrorBoundary(validateReservationId),
 };
