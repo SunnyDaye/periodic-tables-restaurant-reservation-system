@@ -117,6 +117,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
 
   function validateFields() {
     let foundErrors = [];
+    let pattern = /^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/;
     if (!formData.first_name || formData.first_name === "")
       foundErrors.push({ message: "First name required" });
     if (!formData.last_name || formData.last_name === "")
@@ -129,6 +130,9 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
       foundErrors.push({ message: "Date required" });
     if (!formData.reservation_time || formData.reservation_time === "")
       foundErrors.push({ message: "Time required" });
+    console.log(!pattern.test(formData.mobile_number));
+    if (!pattern.test(formData.mobile_number))
+      foundErrors.push({ message: "Must use valid phone number" });
     setErrors(foundErrors);
     return foundErrors.length === 0;
   }
@@ -168,108 +172,108 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
       {!loading ? (
         !denyEdit ? (
           <div className=" container-fluid d-flex justify-content-center align-items-center">
-          <form>
-            {errorsMapped()}
-            <div className="row d-flex mb-3 justify-content-center">
-              <label className="col-2 col-form-label" htmlFor="first_name">
-                First Name:&nbsp;
-              </label>
-              <div className="col-10">
-                <input
-                  className="form-control"
-                  name="first_name"
-                  type="text"
-                  id="first_name"
-                  onChange={handleChange}
-                  value={formData.first_name}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <label className="col-2 col-form-label" htmlFor="last_name">
-                Last Name:&nbsp;
-              </label>
-              <div className="col-10">
-                <input
-                  className="form-control"
-                  name="last_name"
-                  type="text"
-                  id="last_name"
-                  onChange={handleChange}
-                  value={formData.last_name}
-                  required
-                />
-              </div>
-            </div>
-            <div className="row d-flex mb-3 justify-content-center">
-              <label className="col-2 col-form-label" htmlFor="mobile_number">
-                Mobile Number:&nbsp;
-              </label>
-              <div className="col-10">
-                <input
-                  className="form-control"
-                  name="mobile_number"
-                  type="tel"
-                  id="mobile_number"
-                  onChange={handleChange}
-                  value={formData.mobile_number}
-                  required
-                />
-              </div>
-            </div>
-            <div className="row mb-3">
-              <label
-                className="col-1 col-form-label"
-                htmlFor="reservation_date"
-              >
-                Date:&nbsp;
-              </label>
-              <div className="col-3">
-                <input
-                  className="form-control"
-                  name="reservation_date"
-                  type="date"
-                  onChange={handleChange}
-                  value={formData.reservation_date}
-                  required
-                />
+            <form>
+              {errorsMapped()}
+              <div className="row d-flex mb-3 justify-content-center">
+                <label className="col-2 col-form-label" htmlFor="first_name">
+                  First Name:&nbsp;
+                </label>
+                <div className="col-10">
+                  <input
+                    className="form-control"
+                    name="first_name"
+                    type="text"
+                    id="first_name"
+                    onChange={handleChange}
+                    value={formData.first_name}
+                    required
+                  />
+                </div>
               </div>
 
-              <label
-                className="col-1 col-form-label"
-                htmlFor="reservation_time"
-              >
-                Time:&nbsp;
-              </label>
-              <div className="col-3">
-                <input
-                  className="form-control"
-                  name="reservation_time"
-                  type="time"
-                  onChange={handleChange}
-                  value={formData.reservation_time}
-                  required
-                />
+              <div className="row mb-3">
+                <label className="col-2 col-form-label" htmlFor="last_name">
+                  Last Name:&nbsp;
+                </label>
+                <div className="col-10">
+                  <input
+                    className="form-control"
+                    name="last_name"
+                    type="text"
+                    id="last_name"
+                    onChange={handleChange}
+                    value={formData.last_name}
+                    required
+                  />
+                </div>
               </div>
+              <div className="row d-flex mb-3 justify-content-center">
+                <label className="col-2 col-form-label" htmlFor="mobile_number">
+                  Mobile Number:&nbsp;
+                </label>
+                <div className="col-10">
+                  <input
+                    className="form-control"
+                    name="mobile_number"
+                    type="tel"
+                    id="mobile_number"
+                    onChange={handleChange}
+                    value={formData.mobile_number}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="row mb-3">
+                <label
+                  className="col-1 col-form-label"
+                  htmlFor="reservation_date"
+                >
+                  Date:&nbsp;
+                </label>
+                <div className="col-3">
+                  <input
+                    className="form-control"
+                    name="reservation_date"
+                    type="date"
+                    onChange={handleChange}
+                    value={formData.reservation_date}
+                    required
+                  />
+                </div>
 
-              <label className="col-1" htmlFor="people">
-                Party size:&nbsp;
-              </label>
-              <div className="col-3">
-                <input
-                  className="form-control"
-                  name="people"
-                  type="number"
-                  placeholder="0"
-                  onChange={handleChange}
-                  value={formData.people}
-                  required
-                />
+                <label
+                  className="col-1 col-form-label"
+                  htmlFor="reservation_time"
+                >
+                  Time:&nbsp;
+                </label>
+                <div className="col-3">
+                  <input
+                    className="form-control"
+                    name="reservation_time"
+                    type="time"
+                    onChange={handleChange}
+                    value={formData.reservation_time}
+                    required
+                  />
+                </div>
+
+                <label className="col-1" htmlFor="people">
+                  Party size:&nbsp;
+                </label>
+                <div className="col-3">
+                  <input
+                    className="form-control"
+                    name="people"
+                    type="number"
+                    placeholder="0"
+                    onChange={handleChange}
+                    value={formData.people}
+                    required
+                  />
+                </div>
               </div>
-            </div>
-            <div className="row d-flex mb-3 justify-content-center">
+              <div className="row d-flex mb-3 justify-content-center">
                 <button
                   className="btn btn-danger m-1"
                   type="button"
@@ -285,7 +289,7 @@ export default function NewReservation({ edit, reservations, loadDashboard }) {
                   Submit
                 </button>
               </div>
-          </form>
+            </form>
           </div>
         ) : (
           <h1>This reservation is already seated.</h1>
