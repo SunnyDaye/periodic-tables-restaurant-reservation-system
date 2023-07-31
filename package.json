@@ -49,7 +49,7 @@
   "author": "Thinkful, Inc.",
   "license": "UNLICENSED",
   "dependencies": {
-    "knex": "^0.95.10",
+    "knex": "^2.5.1",
     "pg": "^8.7.1",
     "react-router-dom": "^5.2.0"
   }
